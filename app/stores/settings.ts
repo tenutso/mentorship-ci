@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import prisma from "~~/lib/prisma";
+import type { settings } from "@prisma/client";
 export const useSettingsStore = defineStore("settings", () => {
-  const settings = ref({});
+  const settings = ref<settings>({});
   const loading = ref(true);
 
   async function fetchSettings() {

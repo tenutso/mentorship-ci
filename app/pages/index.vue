@@ -29,84 +29,7 @@ useHead({
   link: [
     {
       rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/front/fonts/bootstrap/bootstrap-icons.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/front/libs/font-awesome/css/fontawesome-all.min.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/admin/css/sweet-alert.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/admin/plugins/line-icons/lineicons.css",
-    },
-
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/admin/css/nice-select.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/admin/plugins/select2/css/select2.min.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/admin/plugins/select2/css/select2.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/admin/css/bootstrap-tagsinput.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/front/css/template.css",
-    },
-    {
-      rel: "stylesheet",
-      href: `/assets/front/css/aos.css`,
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/front/libs/owl-carousel/dist/css/owl.carousel.min.css",
-    },
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/front/libs/owl-carousel/dist/css/owl.theme.default.min.css",
-    },
-
-    {
-      rel: "stylesheet",
       href: `https://fonts.googleapis.com/css?family=${settings.site_font}:400,500,600,700`,
-    },
-    {
-      rel: "stylesheet",
-      href: `/assets/front/css/style-over.css`,
-    },
-
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/admin/css/custom-ltr.css",
-    },
-
-    {
-      rel: "stylesheet",
-      type: "text/css",
-      href: "/assets/front/css/style-search.css",
     },
   ],
 });
@@ -115,8 +38,8 @@ const { data: randomMentors } = await useFetch("/api/mentors/random");
 const { data: workflows } = await useFetch("/api/workflows");
 const { data: categories } = await useFetch("/api/categories");
 const { data: features } = await useFetch("/api/features");
-const { data: mentors } = await useFetch("/api/mentors");
-const { data: posts } = await useFetch("/api/posts");
+//const { data: mentors } = await useFetch("/api/mentors");
+//const { data: posts } = await useFetch("/api/posts");
 const { data: testimonials } = await useFetch("/api/testimonials");
 const { data: brands } = await useFetch("/api/brands");
 // 🟢 Search form
@@ -136,65 +59,53 @@ const submitSearch = () => {
     },
   });
 };
+console.log("Mentors: ", randomMentors.value.data);
 </script>
 
 <template>
   <!-- HERO SECTION -->
+
   <section class="border-bottom border-light pt-12 pb-12 bsection">
-    <div class="container">
+    <UContainer>
+      <UTabs
+        :items="[
+          { label: 'Mentee', slot: 'mentee' },
+          { label: 'Mentor', slot: 'mentor' },
+        ]"
+        variant="link"
+        :ui="{ trigger: 'grow' }"
+        class="gap-4 w-full"
+        ><template #mentee>
+          <UPageHero
+            :title="settings.site_title"
+            :description="settings.description"
+          ></UPageHero
+        ></template>
+        <template #mentor>
+          <UPageHero
+            :title="settings.site_title_mentor"
+            description="Build confidence as a leader"
+            :links="[{ label: 'Become a Mentor', to: '/register?trial=start' }]"
+          ></UPageHero
+        ></template>
+      </UTabs>
+      <UPageColumns>
+        <UPageCard v-for="(mentor, index) in randomMentors.data" :key="index">
+          <image :src="`/${mentor.image}`" />
+        </UPageCard>
+      </UPageColumns>
+      <UPageCard>
+        <UPageColumns
+          ><UInput></UInput><USelect></USelect
+          ><USelect></USelect> </UPageColumns
+      ></UPageCard>
+
       <div class="row">
         <div class="col-md-12 home-image-main">
           <div class="hero-mentors-imgs">
-            <div
-              v-for="(mentor, index) in randomMentors"
-              :key="index"
-              class="home-image-sm"
-              data-aos="zoom-in"
-              :data-aos-delay="(index + 1) * 100"
-              :style="{ backgroundImage: `url(${mentor.image})` }"
-            />
-            <i class="bi bi-bell home-icon-1 text-light1 fs-25"></i>
-            <i
-              class="bi bi-person-bounding-box home-icon-2 text-light2 fs-30"
-            ></i>
-            <i class="bi bi-box-seam home-icon-4 text-light3 fs-30"></i>
-          </div>
-
-          <!-- Tabs -->
-          <div class="tab-card-header">
-            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-              <li class="nav-item ml-0">
-                <a
-                  class="nav-link active"
-                  data-bs-toggle="tab"
-                  href="#mentee"
-                  role="tab"
-                  >Mentee</a
-                >
-              </li>
-              <li class="nav-item ml-0">
-                <a
-                  class="nav-link"
-                  data-bs-toggle="tab"
-                  href="#mentor"
-                  role="tab"
-                  >Mentor</a
-                >
-              </li>
-            </ul>
-
             <div class="tab-content" id="myTabContent">
               <!-- Mentee -->
               <div class="tab-pane fade show active" id="one">
-                <div class="col-md-12 pt-8 pl-0">
-                  <h1 class="display-4 mb-2 font-weight-bold">
-                    {{ settings?.site_title }}
-                  </h1>
-                  <p class="text-muted fs-20 mt-2 mb-5">
-                    {{ settings?.description }}
-                  </p>
-                </div>
-
                 <div class="col-lg-10 mb-8 pl-0">
                   <form
                     @submit.prevent="submitSearch"
@@ -271,7 +182,7 @@ const submitSearch = () => {
           </div>
         </div>
       </div>
-    </div>
+    </UContainer>
   </section>
 
   <!-- WORKFLOW -->

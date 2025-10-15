@@ -3,7 +3,7 @@ const settings = useSettingsStore();
 await callOnce(() => settings.fetchSettings());
 </script>
 <template>
-  <div>
+  <UApp>
     <NuxtLayout />
-  </div>
+  </UApp>
 </template>
