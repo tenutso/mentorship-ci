@@ -20,36 +20,8 @@ function installPWA() {
   console.log("Installing PWA...");
   // Optionally integrate with usePWA() composable if available
 }
-const { settings } = useSettingsStore();
-console.log("SETTINGS: ", settings.id);
+const { settings, loading } = useSettingsStore();
 </script>
-
-<style scoped>
-footer {
-  background: #fff;
-}
-.scroll-to-top {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  border: none;
-  background: #007bff;
-  color: #fff;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
-.scroll-to-top i {
-  font-size: 20px;
-}
-.social-icon3 li {
-  display: inline-block;
-  margin-right: 8px;
-}
-.social-icon3 a {
-  color: inherit;
-}
-</style>
 
 <template>
   <footer v-if="menu && !loading" class="pt-8 border-top border-light">

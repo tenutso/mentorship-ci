@@ -59,7 +59,7 @@ const submitSearch = () => {
     },
   });
 };
-console.log("Mentors: ", randomMentors.value.data);
+console.log("Mentors: ", categories.value.data);
 </script>
 
 <template>
@@ -94,11 +94,29 @@ console.log("Mentors: ", randomMentors.value.data);
           <image :src="`/${mentor.image}`" />
         </UPageCard>
       </UPageColumns>
-      <UPageCard>
-        <UPageColumns
-          ><UInput></UInput><USelect></USelect
-          ><USelect></USelect> </UPageColumns
-      ></UPageCard>
+
+      <form @submit.prevent="submitSearch" class="home-search">
+        <UPageCard>
+          <div class="flex">
+            <UInput
+              class="min-w-1/3"
+              v-model="search.name"
+              placeholder="Search by mentor, language or role"
+            ></UInput
+            ><USelect
+              class="min-w-1/4"
+              :items="categories.data"
+              valueKey="name"
+              labelKey="name"
+            ></USelect
+            ><USelect
+              class="min-w-1/4"
+              :items="['Canada', 'USA', 'Mexico']"
+            ></USelect>
+            <UButton class="min-w-1/8" type="submit">Search</UButton>
+          </div>
+        </UPageCard>
+      </form>
 
       <div class="row">
         <div class="col-md-12 home-image-main">

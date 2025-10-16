@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import prisma from "~~/lib/prisma";
 import type { settings } from "@prisma/client";
 export const useSettingsStore = defineStore("settings", () => {
-  const settings = ref<settings>({});
+  const settings = ref<Partial<settings>>({});
   const loading = ref(true);
 
   async function fetchSettings() {
@@ -17,7 +17,6 @@ export const useSettingsStore = defineStore("settings", () => {
         id: 1,
       },
     });
-    console.log("FONT: ", font);
     settings.value.site_font = font.name;
   }
   return { fetchSettings, settings, loading };
