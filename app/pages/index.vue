@@ -1,38 +1,6 @@
 <script setup lang="ts">
-import { useHead } from "#app";
-
 // 🟢 Fetching dynamic data (replace with your endpoints)
 const { settings } = useSettingsStore();
-
-useHead({
-  title: settings.site_name,
-  meta: [
-    { name: "viewport", content: "width=device-width, initial-scale=1" },
-    { charset: "utf-8" },
-    {
-      name: "description",
-      content:
-        "A starter template for Nuxt 3 with Tailwind CSS and DaisyUI integration.",
-    },
-  ],
-  style: [
-    {
-      innerHTML: `
-          :root {
-            --site-color: #${settings.site_color};
-            --site-font: '${settings.site_font}';
-            --rgb: '${hexToRgb(settings.site_color)}';
-          }
-        `,
-    },
-  ],
-  link: [
-    {
-      rel: "stylesheet",
-      href: `https://fonts.googleapis.com/css?family=${settings.site_font}:400,500,600,700`,
-    },
-  ],
-});
 
 const { data: randomMentors } = await useFetch("/api/mentors/random");
 const { data: workflows } = await useFetch("/api/workflows");
@@ -65,8 +33,8 @@ console.log("Mentors: ", categories.value.data);
 <template>
   <!-- HERO SECTION -->
 
-  <section class="border-bottom border-light pt-12 pb-12 bsection">
-    <UContainer>
+  <UContainer>
+    <UPageSection>
       <UTabs
         :items="[
           { label: 'Mentee', slot: 'mentee' },
@@ -77,131 +45,192 @@ console.log("Mentors: ", categories.value.data);
         class="gap-4 w-full"
         ><template #mentee>
           <UPageHero
-            :title="settings.site_title"
-            :description="settings.description"
-          ></UPageHero
+            orientation="horizontal"
+            :title="settings.site_title || ''"
+            :description="settings.description || ''"
+          >
+            <div v-for="(mentor, index) in randomMentors.data" :key="index">
+              <img
+                class="rounded-full w-40 h-40 object-cover shadow-2xl ring ring-default items-rigt"
+                :src="`/${mentor.image}`"
+              /></div></UPageHero
         ></template>
         <template #mentor>
           <UPageHero
-            :title="settings.site_title_mentor"
+            orientation="horizontal"
+            :title="settings.site_title_mentor || ''"
             description="Build confidence as a leader"
             :links="[{ label: 'Become a Mentor', to: '/register?trial=start' }]"
-          ></UPageHero
+          >
+            <span v-for="(mentor, index) in randomMentors.data" :key="index">
+              <img
+                class="rounded-full w-40 h-40 object-cover shadow-2xl ring ring-default"
+                :src="`/${mentor.image}`"
+              />
+            </span> </UPageHero
         ></template>
       </UTabs>
-      <UPageColumns>
-        <UPageCard v-for="(mentor, index) in randomMentors.data" :key="index">
-          <image :src="`/${mentor.image}`" />
-        </UPageCard>
-      </UPageColumns>
 
       <form @submit.prevent="submitSearch" class="home-search">
-        <UPageCard>
-          <div class="flex">
-            <UInput
-              class="min-w-1/3"
-              v-model="search.name"
-              placeholder="Search by mentor, language or role"
-            ></UInput
-            ><USelect
-              class="min-w-1/4"
-              :items="categories.data"
-              valueKey="name"
-              labelKey="name"
-            ></USelect
-            ><USelect
-              class="min-w-1/4"
-              :items="['Canada', 'USA', 'Mexico']"
-            ></USelect>
-            <UButton class="min-w-1/8" type="submit">Search</UButton>
+        <UCard class="w-2/3">
+          <div class="md:flex gap-2">
+            <div class="w-full">
+              <UInput
+                class="min-w-full"
+                v-model="search.name"
+                placeholder="Search by mentor, language or role"
+              ></UInput>
+            </div>
+            <div class="w-full">
+              <USelect
+                class="min-w-full"
+                :items="categories.data"
+                valueKey="name"
+                labelKey="name"
+              ></USelect>
+            </div>
+            <div class="w-full">
+              <USelect
+                class="min-w-full"
+                :items="['Canada', 'USA', 'Mexico']"
+              ></USelect>
+            </div>
+            <UButton class="" type="submit">Search</UButton>
           </div>
-        </UPageCard>
+        </UCard>
       </form>
+    </UPageSection>
 
-      <div class="row">
-        <div class="col-md-12 home-image-main">
-          <div class="hero-mentors-imgs">
-            <div class="tab-content" id="myTabContent">
-              <!-- Mentee -->
-              <div class="tab-pane fade show active" id="one">
-                <div class="col-lg-10 mb-8 pl-0">
-                  <form
-                    @submit.prevent="submitSearch"
-                    class="home-search style-two"
-                  >
-                    <div class="row align-items-center">
-                      <div class="col-md-4">
-                        <div class="form-group has-search">
-                          <span
-                            class="bi bi-search text-primary form-control-feedback"
-                          ></span>
-                          <input
-                            v-model="search.name"
-                            type="text"
-                            placeholder="Search by mentor, language or role"
-                            class="form-control"
-                          />
-                        </div>
-                      </div>
+    <UPageSection class="text-center"
+      ><template #title
+        ><h1 class="font-bold mx-auto">
+          Look at a glance how our systems work
+        </h1></template
+      >
+      <template #leading
+        ><UBadge color="neutral" variant="outline">Workflow</UBadge></template
+      >
+      <template #features>
+        <div v-for="(workflow, index) in workflows.data" :key="workflow.id">
+          <div
+            class="text-center m-2 py-8 px-6"
+            :class="{ 'bg-white shadow-2xl': index === 1 }"
+          >
+            <img
+              :src="workflow.image"
+              class="mb-5 mx-auto rounded-[50%] border-1 border-green-200 p-3 h-[120px] w-[120px]"
+              :alt="workflow.title"
+            />
+            <h5 class="font-bold mb-2">{{ workflow.title }}</h5>
+            <p class="text-muted">{{ workflow.details }}</p>
+          </div>
+        </div>
+      </template>
+    </UPageSection>
+    <UPageSection class="text-center"
+      ><template #title
+        ><h1 class="font-bold mx-auto">
+          Browse Mentors by Categories
+        </h1></template
+      >
+      <template #leading
+        ><UBadge color="neutral" variant="outline">Categories</UBadge></template
+      >
+      <template #features>
+        <div v-for="(category, index) in categories.data" :key="categories.id">
+          <UCard>
+            <div class="text-center m-2 py-8 px-6">
+              <i :class="`${category.icon} text-[20px]`" />
 
-                      <div class="col-md-3">
-                        <select v-model="search.category" class="form-control">
-                          <option value="">Categories</option>
-                          <option
-                            v-for="cat in categories"
-                            :key="cat.id"
-                            :value="cat.id"
-                          >
-                            {{ cat.name }}
-                          </option>
-                        </select>
-                      </div>
-
-                      <div class="col-md-3">
-                        <select v-model="search.country" class="form-control">
-                          <option value="">Country</option>
-                          <!-- Replace with your countries API -->
-                          <option value="1">Canada</option>
-                          <option value="2">USA</option>
-                        </select>
-                      </div>
-
-                      <div class="col-md-2">
-                        <button
-                          type="submit"
-                          class="btn btn-primary btn-md w-100"
-                        >
-                          Search
-                        </button>
+              <h5 class="font-bold mb-2">{{ category.name }}</h5>
+            </div>
+          </UCard>
+        </div>
+      </template>
+    </UPageSection>
+    <div class="row">
+      <div class="col-md-12 home-image-main">
+        <div class="hero-mentors-imgs">
+          <div class="tab-content" id="myTabContent">
+            <!-- Mentee -->
+            <div class="tab-pane fade show active" id="one">
+              <div class="col-lg-10 mb-8 pl-0">
+                <form
+                  @submit.prevent="submitSearch"
+                  class="home-search style-two"
+                >
+                  <div class="row align-items-center">
+                    <div class="col-md-4">
+                      <div class="form-group has-search">
+                        <span
+                          class="bi bi-search text-primary form-control-feedback"
+                        ></span>
+                        <input
+                          v-model="search.name"
+                          type="text"
+                          placeholder="Search by mentor, language or role"
+                          class="form-control"
+                        />
                       </div>
                     </div>
-                  </form>
-                </div>
-              </div>
 
-              <!-- Mentor -->
-              <div class="tab-pane fade" id="two">
-                <div class="col-md-12 pt-8 pl-0 text-left">
-                  <h1 class="display-4 mb-2 font-weight-bold">
-                    {{ settings?.site_title_mentor }}
-                  </h1>
-                  <p class="text-muted fs-20 mt-2 mb-5">
-                    Build confidence as a leader
-                  </p>
-                  <NuxtLink
-                    to="/register?trial=start"
-                    class="btn btn-lg btn-primary mt-4"
-                  >
-                    Become a Member
-                  </NuxtLink>
-                </div>
+                    <div class="col-md-3">
+                      <select v-model="search.category" class="form-control">
+                        <option value="">Categories</option>
+                        <option
+                          v-for="cat in categories"
+                          :key="cat.id"
+                          :value="cat.id"
+                        >
+                          {{ cat.name }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-3">
+                      <select v-model="search.country" class="form-control">
+                        <option value="">Country</option>
+                        <!-- Replace with your countries API -->
+                        <option value="1">Canada</option>
+                        <option value="2">USA</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-2">
+                      <button
+                        type="submit"
+                        class="btn btn-primary btn-md w-100"
+                      >
+                        Search
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Mentor -->
+            <div class="tab-pane fade" id="two">
+              <div class="col-md-12 pt-8 pl-0 text-left">
+                <h1 class="display-4 mb-2 font-weight-bold">
+                  {{ settings?.site_title_mentor }}
+                </h1>
+                <p class="text-muted fs-20 mt-2 mb-5">
+                  Build confidence as a leader
+                </p>
+                <NuxtLink
+                  to="/register?trial=start"
+                  class="btn btn-lg btn-primary mt-4"
+                >
+                  Become a Member
+                </NuxtLink>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </UContainer>
-  </section>
+    </div>
+  </UContainer>
 
   <!-- WORKFLOW -->
   <section v-if="workflows?.length" class="zindex-low py-12">

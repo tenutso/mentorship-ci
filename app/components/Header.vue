@@ -17,21 +17,23 @@ useHead({
         "A starter template for Nuxt 3 with Tailwind CSS and DaisyUI integration.",
     },
   ],
-  // style: [
-  //   {
-  //     innerHTML: `
-  //         :root {
-  //           --site-color: #${settings.site_color};
-  //           --site-font: '${settings.site_font}';
-  //           --rgb: '${hexToRgb(settings.site_color)}';
-  //         }
-  //       `,
-  //   },
-  // ],
+  style: [
+    {
+      innerHTML: `:root { 
+        --ui-primary: rgb(${hexToRgb(settings.site_color)});
+        --font-sans: '${settings.site_font}', sans-serif;
+      }`,
+    },
+  ],
   link: [
     {
       rel: "stylesheet",
       href: `https://fonts.googleapis.com/css?family=${settings.site_font}:400,500,600,700`,
+    },
+    {
+      // temporary bootstrap icons
+      rel: "stylesheet",
+      href: "/assets/front/fonts/bootstrap/bootstrap-icons.css",
     },
   ],
 });
@@ -91,7 +93,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     <template #left>
       <!-- Logo -->
       <NuxtLink to="/">
-        <image :src="settings.logo" width="160" alt="logo" />
+        <img :src="`/${settings.logo}`" width="100" alt="logo" />
       </NuxtLink>
     </template>
 
