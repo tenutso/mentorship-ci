@@ -27,6 +27,9 @@ const submitSearch = () => {
     },
   });
 };
+async function mentorsByCategory(cat: Number) {
+  return await useFetch("/api/mentors/count_by_categories");
+}
 console.log("Mentors: ", categories.value.data);
 </script>
 
@@ -143,6 +146,9 @@ console.log("Mentors: ", categories.value.data);
               <i :class="`${category.icon} text-[20px]`" />
 
               <h5 class="font-bold mb-2">{{ category.name }}</h5>
+              <h5 class="font-bold mb-2">
+                Mentors {{ mentorsByCategory(category.id) }}
+              </h5>
             </div>
           </UCard>
         </div>
@@ -418,28 +424,3 @@ console.log("Mentors: ", categories.value.data);
     </div>
   </section>
 </template>
-
-<style scoped>
-.hero-mentors-imgs > div {
-  background-size: cover;
-  background-position: center;
-  border-radius: 10px;
-  height: 150px;
-  width: 150px;
-  display: inline-block;
-  margin: 0 5px;
-}
-.avatar-sm {
-  width: 80px;
-  height: 80px;
-  background-size: cover;
-  border-radius: 50%;
-}
-.brand_img {
-  width: 120px;
-  height: 60px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-</style>
