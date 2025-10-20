@@ -10,5 +10,5 @@ export default defineEventHandler(async () => {
 
   const randomMentors = mentors.sort(() => 0.5 - Math.random()).slice(0, 5);
   console.log("RANDOM: ", randomMentors);
-  return { success: true, data: randomMentors };
+  return randomMentors;
 });

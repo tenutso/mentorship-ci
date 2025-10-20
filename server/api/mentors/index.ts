@@ -49,13 +49,13 @@ export default defineEventHandler(async (event) => {
       filters.category = { slug: String(query.category) };
     }
 
-    const mentors = await prisma.user.findMany({
+    const mentors = await prisma.users.findMany({
       where: filters,
       include: {
-        skills: {
-          select: { skillId: true },
+        users_skill: {
+          select: { skill_id: true },
         },
-        category: {
+        categories: {
           select: { slug: true },
         },
       },
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
       distinct: ["id"], // group by id
     });
 
-    return { success: true, data: mentors };
+    return mentors;
   } catch (error) {
     console.error("Error fetching mentors:", error);
     return sendError(

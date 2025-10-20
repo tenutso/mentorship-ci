@@ -1,5 +1,5 @@
 import prisma from "~~/lib/prisma";
 export default defineEventHandler(async () => {
-  const workflows = await prisma.workflows.findMany({});
-  return workflows;
+  const features = await prisma.features.findMany({});
+  return features;
 });

@@ -5,9 +5,10 @@ const { settings } = useSettingsStore();
 const { data: randomMentors } = await useFetch("/api/mentors/random");
 const { data: workflows } = await useFetch("/api/workflows");
 const { data: categories } = await useFetch("/api/categories");
+const { data: catCount } = await useFetch("/api/mentors/count_by/categories");
 const { data: features } = await useFetch("/api/features");
-//const { data: mentors } = await useFetch("/api/mentors");
-//const { data: posts } = await useFetch("/api/posts");
+const { data: mentors } = await useFetch("/api/mentors");
+const { data: posts } = await useFetch("/api/posts");
 const { data: testimonials } = await useFetch("/api/testimonials");
 const { data: brands } = await useFetch("/api/brands");
 // 🟢 Search form
@@ -27,10 +28,10 @@ const submitSearch = () => {
     },
   });
 };
-async function mentorsByCategory(cat: Number) {
-  return await useFetch("/api/mentors/count_by_categories");
+
+function categoryCount(id: Number) {
+  return catCount.value.find((item: any) => item.id === id) || 0;
 }
-console.log("Mentors: ", categories.value.data);
 </script>
 
 <template>
@@ -52,7 +53,7 @@ console.log("Mentors: ", categories.value.data);
             :title="settings.site_title || ''"
             :description="settings.description || ''"
           >
-            <div v-for="(mentor, index) in randomMentors.data" :key="index">
+            <div v-for="(mentor, index) in randomMentors" :key="index">
               <img
                 class="rounded-full w-40 h-40 object-cover shadow-2xl ring ring-default items-rigt"
                 :src="`/${mentor.image}`"
@@ -114,7 +115,7 @@ console.log("Mentors: ", categories.value.data);
         ><UBadge color="neutral" variant="outline">Workflow</UBadge></template
       >
       <template #features>
-        <div v-for="(workflow, index) in workflows.data" :key="workflow.id">
+        <div v-for="(workflow, index) in workflows" :key="workflow.id">
           <div
             class="text-center m-2 py-8 px-6"
             :class="{ 'bg-white shadow-2xl': index === 1 }"
@@ -140,14 +141,14 @@ console.log("Mentors: ", categories.value.data);
         ><UBadge color="neutral" variant="outline">Categories</UBadge></template
       >
       <template #features>
-        <div v-for="(category, index) in categories.data" :key="categories.id">
+        <div v-for="(category, index) in categories" :key="categories.id">
           <UCard>
             <div class="text-center m-2 py-8 px-6">
               <i :class="`${category.icon} text-[20px]`" />
 
               <h5 class="font-bold mb-2">{{ category.name }}</h5>
               <h5 class="font-bold mb-2">
-                Mentors {{ mentorsByCategory(category.id) }}
+                Mentors {{ categoryCount(category.id).cnt }}
               </h5>
             </div>
           </UCard>
@@ -237,63 +238,6 @@ console.log("Mentors: ", categories.value.data);
       </div>
     </div>
   </UContainer>
-
-  <!-- WORKFLOW -->
-  <section v-if="workflows?.length" class="zindex-low py-12">
-    <div class="container">
-      <div class="text-center mx-auto mb-8">
-        <span class="badge badge-secondary-soft mb-3">Workflow</span>
-        <h1 class="text-dark font-weight-bold">How It Works</h1>
-      </div>
-
-      <div class="row">
-        <div
-          v-for="(workflow, index) in workflows"
-          :key="workflow.id"
-          class="col-md-4 mb-7"
-          data-aos="zoom-in-up"
-          :data-aos-delay="index * 150"
-        >
-          <div
-            class="text-center m-2 py-6 px-4"
-            :class="{ 'shadow-workflow': index === 1 }"
-          >
-            <img :src="workflow.image" class="mb-5" :alt="workflow.title" />
-            <h5 class="mb-2">{{ workflow.title }}</h5>
-            <p class="text-muted">{{ workflow.details }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CATEGORIES -->
-  <section v-if="categories?.length" class="bg-primary-soft py-12">
-    <div class="container text-center">
-      <div class="mb-8">
-        <span class="badge badge-secondary-soft mb-3">Categories</span>
-        <h1>Browse mentors by categories</h1>
-      </div>
-
-      <div class="row">
-        <div
-          v-for="(category, index) in categories"
-          :key="category.id"
-          class="col-md-3 col-sm-6 mb-4"
-          :data-aos-delay="index * 100"
-          data-aos="zoom-in-up"
-        >
-          <NuxtLink :to="`/mentors?category=${category.slug}`">
-            <div class="template-box text-center shadow-sm rounded-1 p-4">
-              <i :class="category.icon + ' fs-20 mb-3'"></i>
-              <p class="fw-bold mb-1">{{ category.name }}</p>
-              <p class="text-muted">{{ category.mentor_count }} mentors</p>
-            </div>
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- FEATURES -->
   <section v-if="features?.length" class="bg-white py-12">

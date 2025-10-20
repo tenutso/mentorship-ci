@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
           name: true,
         },
       },
-      user: {
+      users: {
         select: {
           role: true,
         },

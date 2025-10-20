@@ -45,6 +45,7 @@ model blog_category {
   name    String @db.VarChar(255)
   slug    String @db.VarChar(255)
   status  Int
+  blogs    blogs[]
 }
 
 model blog_posts {
@@ -68,7 +69,9 @@ model blogs {
   lang_id     String?  @db.VarChar(155)
   business_id String?  @db.VarChar(155)
   user_id     Int
+  user        users @relation(fields: [user_id], references: [id])
   category_id Int
+  category    blog_categories @relation(fields: [category_id], references: [id])
   title       String   @db.VarChar(255)
   slug        String   @db.VarChar(255)
   details     String?  @db.LongText
@@ -733,6 +736,7 @@ model skills {
   category_id String  @db.VarChar(255)
   details     String? @db.Text
   status      String  @db.VarChar(255)
+  users       users_skills[]
 }
 
 model tags {
@@ -824,6 +828,8 @@ model users {
   holidays                String?   @db.LongText
   date_format             String?   @default("d M Y") @db.VarChar(255)
   created_at              DateTime? @db.DateTime(0)
+  blogs                   blogs[]
+  users_skill          users_skill[]
 }
 
 model users_payout_accounts {
@@ -854,7 +860,11 @@ model users_payout_accounts {
 model users_skill {
   id       Int @id @default(autoincrement())
   user_id  Int
+  users    users @relation(fields: [user_id], references: [id])
   skill_id Int
+  skills   skills @relation(fields: [skill_id], references: [id])
+  
+  @@id([skill_id, user_id])
 }
 
 model workflows {
