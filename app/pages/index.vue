@@ -6,7 +6,7 @@ const { data: randomMentors } = await useFetch("/api/mentors/random");
 const { data: workflows } = await useFetch("/api/workflows");
 const { data: categories } = await useFetch("/api/categories");
 const { data: catCount } = await useFetch("/api/mentors/count_by/categories");
-const { data: features } = await useFetch("/api/features");
+const { data: features } = await useFetch("/api/product_services");
 const { data: mentors } = await useFetch("/api/mentors");
 const { data: posts } = await useFetch("/api/posts");
 const { data: testimonials } = await useFetch("/api/testimonials");
@@ -89,6 +89,7 @@ function categoryCount(id: Number) {
               <USelect
                 class="min-w-full"
                 :items="categories"
+                v-model="search.category"
                 valueKey="name"
                 labelKey="name"
               ></USelect>
@@ -97,6 +98,7 @@ function categoryCount(id: Number) {
               <USelect
                 class="min-w-full"
                 :items="['Canada', 'USA', 'Mexico']"
+                v-model="search.country"
               ></USelect>
             </div>
             <UButton class="" type="submit">Search</UButton>
@@ -152,6 +154,28 @@ function categoryCount(id: Number) {
               </h5>
             </div>
           </UCard>
+        </div>
+      </template>
+    </UPageSection>
+    <UPageSection v-if="features.length" class="text-center"
+      ><template #title
+        ><h1 class="font-bold mx-auto">
+          Learn that new skill, launch that project, land your dream career.
+        </h1></template
+      >
+      <template #leading
+        ><UBadge color="neutral" variant="outline">Features</UBadge></template
+      >
+      <template #features>
+        <div v-for="(feature, index) in features" :key="feature.id">
+          <div
+            class="text-center m-2 py-8 px-6"
+            :class="{ 'bg-white shadow-2xl': index === 1 }"
+          >
+            <img :src="feature.image" class="mb-3 w-25" :alt="feature.name" />
+            <h5 class="text-dark mb-2">{{ feature.name }}</h5>
+            <p class="text-muted">{{ feature.details }}</p>
+          </div>
         </div>
       </template>
     </UPageSection>
