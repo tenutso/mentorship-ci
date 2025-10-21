@@ -88,7 +88,7 @@ function categoryCount(id: Number) {
             <div class="w-full">
               <USelect
                 class="min-w-full"
-                :items="categories.data"
+                :items="categories"
                 valueKey="name"
                 labelKey="name"
               ></USelect>

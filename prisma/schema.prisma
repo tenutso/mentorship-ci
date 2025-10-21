@@ -69,9 +69,9 @@ model blogs {
   lang_id     String?  @db.VarChar(155)
   business_id String?  @db.VarChar(155)
   user_id     Int
-  user        users @relation(fields: [user_id], references: [id])
+  users        users @relation(fields: [user_id], references: [id])
   category_id Int
-  category    blog_categories @relation(fields: [category_id], references: [id])
+  category    blog_category @relation(fields: [category_id], references: [id])
   title       String   @db.VarChar(255)
   slug        String   @db.VarChar(255)
   details     String?  @db.LongText
@@ -172,6 +172,7 @@ model categories {
   details   String? @db.Text
   direction String? @db.Text
   status    Int
+  users     users[]
 }
 
 model collections {
@@ -736,7 +737,7 @@ model skills {
   category_id String  @db.VarChar(255)
   details     String? @db.Text
   status      String  @db.VarChar(255)
-  users       users_skills[]
+  users       users_skill[]
 }
 
 model tags {
@@ -799,12 +800,12 @@ model users {
   cover                   String?   @db.VarChar(255)
   status                  Int?      @default(0)
   country                 Int?
-  currency                String?   @default("USD") @db.VarChar(255)
+  currency                String?   @default("CAD") @db.VarChar(255)
   about_me                String?   @db.VarChar(5000)
   gender                  String?   @db.VarChar(255)
   language                String?   @db.VarChar(255)
   skill                   String?   @db.VarChar(500)
-  category                String?   @db.VarChar(255)
+  category                Int?      
   level                   String?   @db.VarChar(255)
   experience_year         String?   @db.VarChar(255)
   meet_type               String?   @default("zoom") @db.VarChar(155)
@@ -829,7 +830,8 @@ model users {
   date_format             String?   @default("d M Y") @db.VarChar(255)
   created_at              DateTime? @db.DateTime(0)
   blogs                   blogs[]
-  users_skill          users_skill[]
+  users_skill             users_skill[]
+  categories  categories?  @relation(fields:[category], references:[id])
 }
 
 model users_payout_accounts {
@@ -863,8 +865,6 @@ model users_skill {
   users    users @relation(fields: [user_id], references: [id])
   skill_id Int
   skills   skills @relation(fields: [skill_id], references: [id])
-  
-  @@id([skill_id, user_id])
 }
 
 model workflows {
