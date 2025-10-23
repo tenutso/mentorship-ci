@@ -1,5 +1,6 @@
-import prisma from "~~/lib/prisma";
+const db = useDrizzle();
 export default defineEventHandler(async () => {
-  const workflows = await prisma.workflows.findMany({});
+  const workflows = await db.select().from(tables.workflows);
+  console.log(workflows);
   return workflows;
 });

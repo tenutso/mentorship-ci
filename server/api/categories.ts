@@ -1,5 +1,5 @@
-import prisma from "~~/lib/prisma";
+const db = useDrizzle();
 export default defineEventHandler(async () => {
-  const categories = await prisma.categories.findMany({});
+  const categories = await db.select().from(tables.categories);
   return categories;
 });

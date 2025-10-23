@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
-import prisma from "~~/lib/prisma";
-import type { settings } from "@prisma/client";
+import { useDrizzle, tables, eq } from "~~/server/utils/drizzle";
 export const useSettingsStore = defineStore("settings", () => {
-  const settings = ref<Partial<settings>>({});
+  const settings = ref<any>({});
   const loading = ref(true);
 
   async function fetchSettings() {
@@ -10,14 +9,15 @@ export const useSettingsStore = defineStore("settings", () => {
       "/api/settings"
     );
 
-    settings.value = data.value.settings || {};
+    settings.value = data.value?.settings || {};
     loading.value = pending.value;
-    const font = await prisma.fonts.findUnique({
-      where: {
-        id: 1,
-      },
-    });
-    settings.value.site_font = font.name;
+    const font = await useDrizzle()
+      .select()
+      .from(tables.fonts)
+      .where(eq(tables.fonts.id, 1));
+    settings.value.site_font = font[0]?.name;
+    //console.log("STORE: ", data.value);
   }
+
   return { fetchSettings, settings, loading };
 });

@@ -1,8 +1,9 @@
-import prisma from "~~/lib/prisma";
+const db = useDrizzle();
 export default defineEventHandler(async (event) => {
   //const prisma = usePrismaClient();
-  const settings = await prisma.settings.findFirst();
+  const settings = await db.select().from(tables.settings);
+
   return {
-    settings,
+    settings: settings[0],
   };
 });

@@ -30,7 +30,7 @@ const { settings, loading } = useSettingsStore();
         <!-- About & Social -->
         <div class="col-sm-5 col-lg-5 mb-5 mb-lg-0">
           <img :src="settings.logo" class="w-30 mb-4" alt="logo" />
-          <p>{{ settings.footer_about }}</p>
+          <p>{{ settings.footerAbout }}</p>
 
           <ul class="list-unstyled social-icon3 mb-0">
             <li v-if="settings.facebook">
@@ -63,10 +63,10 @@ const { settings, loading } = useSettingsStore();
           <h3 class="h6">Services</h3>
           <ul class="footer-list-style-two">
             <li><NuxtLink to="/mentors">Mentors</NuxtLink></li>
-            <li v-if="settings.enable_blog">
+            <li v-if="settings.enableBlog">
               <NuxtLink to="/blogs">Blogs</NuxtLink>
             </li>
-            <li v-if="settings.enable_faq">
+            <li v-if="settings.enableFaq">
               <NuxtLink to="/faqs">Faqs</NuxtLink>
             </li>
             <li><NuxtLink to="/contact">Contact</NuxtLink></li>

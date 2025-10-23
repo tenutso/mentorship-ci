@@ -20,15 +20,15 @@ useHead({
   style: [
     {
       innerHTML: `:root { 
-        --ui-primary: rgb(${hexToRgb(settings.site_color)});
-        --font-sans: '${settings.site_font}', sans-serif;
+        --ui-primary: rgb(${hexToRgb(settings.siteColor)});
+        --font-sans: '${settings.siteFont}', sans-serif;
       }`,
     },
   ],
   link: [
     {
       rel: "stylesheet",
-      href: `https://fonts.googleapis.com/css?family=${settings.site_font}:400,500,600,700`,
+      href: `https://fonts.googleapis.com/css?family=${settings.siteFont}:400,500,600,700`,
     },
     {
       // temporary bootstrap icons

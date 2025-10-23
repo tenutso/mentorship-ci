@@ -3,10 +3,5 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   css: ["~/assets/css/main.css"],
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "@prisma/nuxt", "@pinia/nuxt"],
-  prisma: {
-    generateClient: true,
-    formatSchema: false,
-    runMigration: false,
-  },
+  modules: ["@nuxt/ui", "@pinia/nuxt"],
 });

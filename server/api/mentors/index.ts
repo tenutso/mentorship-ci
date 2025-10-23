@@ -1,74 +1,95 @@
-import prisma from "~~/lib/prisma";
-import { getQuery } from "h3";
+import { eq, and, or, like, SQL } from "~~/server/utils/drizzle";
+
+const db = useDrizzle();
+
+interface SearchParams {
+  mentor_search_name?: string;
+  mentor_search_country?: string;
+  mentor_search_experience?: string;
+  mentor_search_skill?: string;
+  category?: string;
+  search_name?: string;
+  search_category?: string;
+  search_country?: string;
+}
 
 export default defineEventHandler(async (event) => {
-  try {
-    const query = getQuery(event);
+  // Drizzle builds queries dynamically using an array of conditions
+  const conditions: (SQL | undefined)[] = [];
 
-    const filters: any = {
-      role: "user",
-      status: 1,
-    };
+  const params = <SearchParams>event.context.params;
 
-    if (query.mentor_search_name) {
-      filters.name = {
-        contains: String(query.mentor_search_name),
-        mode: "insensitive",
-      };
+  // --- Static WHERE clauses ---
+  conditions.push(eq(tables.users.role, "user"));
+  conditions.push(eq(tables.users.status, 1));
+
+  // --- Dynamic WHERE/LIKE clauses ---
+  if (params.mentor_search_name) {
+    conditions.push(like(tables.users.name, `%${params.mentor_search_name}%`));
+  }
+  if (params.mentor_search_country) {
+    conditions.push(eq(tables.users.country, params.mentor_search_country));
+  }
+  if (params.mentor_search_experience) {
+    // Ensure the parameter is a number
+    const expYear = parseInt(params.mentor_search_experience, 10);
+    if (!isNaN(expYear)) {
+      conditions.push(eq(tables.users.experienceYear, expYear));
     }
-
-    if (query.mentor_search_country) {
-      filters.country = String(query.mentor_search_country);
+  }
+  if (params.mentor_search_skill) {
+    // Ensure the parameter is a number
+    const skillId = parseInt(params.mentor_search_skill, 10);
+    if (!isNaN(skillId)) {
+      conditions.push(eq(tables.usersSkill.skillId, skillId));
     }
+  }
+  if (params.category) {
+    conditions.push(eq(tables.categories.slug, params.category));
+  }
 
-    if (query.mentor_search_experience) {
-      filters.experienceYear = Number(query.mentor_search_experience);
-    }
-
-    if (query.search_name) {
-      filters.OR = [
-        { name: { contains: String(query.search_name), mode: "insensitive" } },
-        {
-          language: {
-            contains: String(query.search_name),
-            mode: "insensitive",
-          },
-        },
-      ];
-    }
-
-    if (query.search_country) {
-      filters.country = String(query.search_country);
-    }
-
-    if (query.search_category) {
-      filters.categoryId = Number(query.search_category);
-    }
-
-    if (query.category) {
-      filters.category = { slug: String(query.category) };
-    }
-
-    const mentors = await prisma.users.findMany({
-      where: filters,
-      include: {
-        users_skill: {
-          select: { skill_id: true },
-        },
-        categories: {
-          select: { slug: true },
-        },
-      },
-      orderBy: { id: "asc" },
-      distinct: ["id"], // group by id
-    });
-
-    return mentors;
-  } catch (error) {
-    console.error("Error fetching mentors:", error);
-    return sendError(
-      event,
-      createError({ statusCode: 500, statusMessage: "Server error" })
+  // --- OR_LIKE condition ---
+  if (params.search_name) {
+    conditions.push(
+      or(
+        like(tables.users.name, `%${params.search_name}%`),
+        like(tables.users.language, `%${params.search_name}%`)
+      )
     );
   }
+
+  if (params.search_category) {
+    // Ensure the parameter is a number
+    const catId = parseInt(params.search_category, 10);
+    if (!isNaN(catId)) {
+      conditions.push(eq(tables.users.category, catId));
+    }
+  }
+  if (params.search_country) {
+    conditions.push(eq(tables.users.country, params.search_country));
+  }
+
+  // --- Build the final query ---
+  const query = db
+    .select({
+      // Select all columns from 'users' (equiv. to u.*)
+      ...tables.users,
+      // Select and alias specific columns
+      skillId: tables.usersSkill.skillId,
+      category_slug: tables.categories.slug,
+    })
+    .from(tables.users)
+    .leftJoin(tables.usersSkill, eq(tables.users.id, tables.usersSkill.userId))
+    .leftJoin(
+      tables.categories,
+      eq(tables.users.category, tables.categories.id)
+    )
+    .where(and(...conditions)) // Apply all conditions
+    .groupBy(tables.users.id);
+
+  // --- Execute the query ---
+  const results = await query;
+
+  // results is an array of objects, just like CI's $query->result()
+  return results;
 });
