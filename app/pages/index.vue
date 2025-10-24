@@ -50,7 +50,7 @@ function categoryCount(id: Number) {
         ><template #mentee>
           <UPageHero
             orientation="horizontal"
-            :title="settings.site_title || ''"
+            :title="settings.siteTitle || ''"
             :description="settings.description || ''"
           >
             <div v-for="(mentor, index) in randomMentors" :key="index">
@@ -62,11 +62,11 @@ function categoryCount(id: Number) {
         <template #mentor>
           <UPageHero
             orientation="horizontal"
-            :title="settings.site_title_mentor || ''"
+            :title="settings.siteTitle_mentor || ''"
             description="Build confidence as a leader"
             :links="[{ label: 'Become a Mentor', to: '/register?trial=start' }]"
           >
-            <span v-for="(mentor, index) in randomMentors.data" :key="index">
+            <span v-for="(mentor, index) in randomMentors" :key="index">
               <img
                 class="rounded-full w-40 h-40 object-cover shadow-2xl ring ring-default"
                 :src="`/${mentor.image}`"
@@ -143,7 +143,7 @@ function categoryCount(id: Number) {
         ><UBadge color="neutral" variant="outline">Categories</UBadge></template
       >
       <template #features>
-        <div v-for="(category, index) in categories" :key="categories.id">
+        <div v-for="(category, index) in categories" :key="category.id">
           <UCard>
             <div class="text-center m-2 py-8 px-6">
               <i :class="`${category.icon} text-[20px]`" />
@@ -157,7 +157,7 @@ function categoryCount(id: Number) {
         </div>
       </template>
     </UPageSection>
-    <UPageSection v-if="features.length" class="text-center"
+    <UPageSection v-if="features?.length" class="text-center"
       ><template #title
         ><h1 class="font-bold mx-auto">
           Learn that new skill, launch that project, land your dream career.
@@ -244,7 +244,7 @@ function categoryCount(id: Number) {
             <div class="tab-pane fade" id="two">
               <div class="col-md-12 pt-8 pl-0 text-left">
                 <h1 class="display-4 mb-2 font-weight-bold">
-                  {{ settings?.site_title_mentor }}
+                  {{ settings?.site_titleMentor }}
                 </h1>
                 <p class="text-muted fs-20 mt-2 mb-5">
                   Build confidence as a leader
@@ -349,7 +349,7 @@ function categoryCount(id: Number) {
       <span class="badge badge-secondary-soft mb-3">Testimonials</span>
       <h1 class="text-dark font-weight-bold mb-8">
         What people say about
-        <b class="text-primary">{{ settings?.site_name }}</b>
+        <b class="text-primary">{{ settings?.siteName }}</b>
       </h1>
 
       <div class="row justify-content-center">

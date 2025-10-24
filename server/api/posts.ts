@@ -26,7 +26,5 @@ export default defineEventHandler(async (event) => {
   // --- Execute the query ---
   const results = await query;
 
-  return {
-    posts: results,
-  };
+  return results;
 });
