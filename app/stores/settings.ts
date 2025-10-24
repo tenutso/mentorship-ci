@@ -3,6 +3,7 @@ import { useDrizzle, tables, eq } from "~~/server/utils/drizzle";
 export const useSettingsStore = defineStore("settings", () => {
   const settings = ref<any>({});
   const loading = ref(true);
+  const siteFont = ref<any>({});
 
   async function fetchSettings() {
     const { data, status, error, pending, clear } = await useFetch(
@@ -11,13 +12,10 @@ export const useSettingsStore = defineStore("settings", () => {
 
     settings.value = data.value?.settings || {};
     loading.value = pending.value;
-    const font = await useDrizzle()
-      .select()
-      .from(tables.fonts)
-      .where(eq(tables.fonts.id, 1));
-    settings.value.site_font = font[0]?.name;
+    siteFont.value = data.value?.siteFont || "";
+
     //console.log("STORE: ", data.value);
   }
 
-  return { fetchSettings, settings, loading };
+  return { fetchSettings, settings, loading, siteFont };
 });
