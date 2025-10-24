@@ -4,7 +4,7 @@ import { useHead } from "#app";
 import type { NavigationMenuItem } from "@nuxt/ui";
 
 // 🟢 Fetching dynamic data (replace with your endpoints)
-const { settings } = useSettingsStore();
+const { settings, siteFont } = useSettingsStore();
 
 useHead({
   title: settings.site_name,
@@ -21,14 +21,14 @@ useHead({
     {
       innerHTML: `:root { 
         --ui-primary: rgb(${hexToRgb(settings.siteColor)});
-        --font-sans: '${settings.siteFont}', sans-serif;
+        --font-sans: '${siteFont.name}', sans-serif;
       }`,
     },
   ],
   link: [
     {
       rel: "stylesheet",
-      href: `https://fonts.googleapis.com/css?family=${settings.siteFont}:400,500,600,700`,
+      href: `https://fonts.googleapis.com/css?family=${siteFont.name}:400,500,600,700`,
     },
     {
       // temporary bootstrap icons
