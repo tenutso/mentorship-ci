@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // 🟢 Fetching dynamic data (replace with your endpoints)
-const { settings } = useSettingsStore();
+
+const { settings } = await useSettingsStore();
 
 const { data: randomMentors } = await useFetch("/api/mentors/random");
 const { data: workflows } = await useFetch("/api/workflows");
@@ -62,7 +63,7 @@ function categoryCount(id: Number) {
         <template #mentor>
           <UPageHero
             orientation="horizontal"
-            :title="settings.siteTitle_mentor || ''"
+            :title="settings.siteTitleMentor || ''"
             description="Build confidence as a leader"
             :links="[{ label: 'Become a Mentor', to: '/register?trial=start' }]"
           >

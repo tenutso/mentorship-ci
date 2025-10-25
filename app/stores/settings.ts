@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useDrizzle, tables, eq } from "~~/server/utils/drizzle";
 export const useSettingsStore = defineStore("settings", () => {
   const settings = ref<any>({});
   const loading = ref(true);

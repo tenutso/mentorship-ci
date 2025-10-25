@@ -7,7 +7,7 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 const { settings, siteFont } = useSettingsStore();
 
 useHead({
-  title: settings.site_name,
+  title: settings.siteName,
   meta: [
     { name: "viewport", content: "width=device-width, initial-scale=1" },
     { charset: "utf-8" },
