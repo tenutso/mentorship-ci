@@ -3,6 +3,7 @@
 
 const { settings } = await useSettingsStore();
 
+const { data: countries } = await useFetch("/api/countries");
 const { data: randomMentors } = await useFetch("/api/mentors/random");
 const { data: workflows } = await useFetch("/api/workflows");
 const { data: categories } = await useFetch("/api/categories");
@@ -30,366 +31,84 @@ const submitSearch = () => {
   });
 };
 
-function categoryCount(id: Number) {
-  return catCount.value.find((item: any) => item.id === id) || 0;
+
+// This function would be replaced by nuxt-i18n's $t() function
+const trans = (key: string) => {
+  const translations: Record<string, string> = {
+    'mentee': 'I am a Mentee',
+    'mentor': 'I am a Mentor',
+    'build-confidence-as-a-leader': 'Build confidence as a leader and give back.',
+    'became-a-member': 'Become a Member',
+    'workflow': 'Workflow',
+    'workflow-title': 'How It Works',
+    'categories': 'Categories',
+    'browse-mentors-by-categories': 'Browse mentors by categories',
+    'mentors': 'Mentors',
+    'features': 'Features',
+    'learn-that-new-skill-launch-that-project': 'Learn that new skill, launch that project',
+    'discover-the-worlds-top-mentors': "Discover the world's top mentors",
+    'blogs': 'Blogs',
+    'learn-more-empower-yourself': 'Learn more, empower yourself',
+    'testimonial': 'Testimonials',
+    'testimonial-title': 'What our users say about',
+  }
+  return translations[key] || key
 }
+
+
 </script>
 
 <template>
-  <!-- HERO SECTION -->
+  <main>
+    <HomeHero
+      :settings="settings"
+      :random-mentors="randomMentors"
+      :categories="categories"
+      :countries="countries"
+      :trans="trans"
+    />
 
-  <UContainer>
-    <UPageSection>
-      <UTabs
-        :items="[
-          { label: 'Mentee', slot: 'mentee' },
-          { label: 'Mentor', slot: 'mentor' },
-        ]"
-        variant="link"
-        :ui="{ trigger: 'grow' }"
-        class="gap-4 w-full"
-        ><template #mentee>
-          <UPageHero
-            orientation="horizontal"
-            :title="settings.siteTitle || ''"
-            :description="settings.description || ''"
-          >
-            <div v-for="(mentor, index) in randomMentors" :key="index">
-              <img
-                class="rounded-full w-40 h-40 object-cover shadow-2xl ring ring-default items-rigt"
-                :src="`/${mentor.image}`"
-              /></div></UPageHero
-        ></template>
-        <template #mentor>
-          <UPageHero
-            orientation="horizontal"
-            :title="settings.siteTitleMentor || ''"
-            description="Build confidence as a leader"
-            :links="[{ label: 'Become a Mentor', to: '/register?trial=start' }]"
-          >
-            <span v-for="(mentor, index) in randomMentors" :key="index">
-              <img
-                class="rounded-full w-40 h-40 object-cover shadow-2xl ring ring-default"
-                :src="`/${mentor.image}`"
-              />
-            </span> </UPageHero
-        ></template>
-      </UTabs>
+    <HomeWorkflow
+      v-if="workflows?.length"
+      :workflows="workflows"
+      :trans="trans"
+    />
 
-      <form @submit.prevent="submitSearch" class="home-search">
-        <UCard class="w-2/3">
-          <div class="md:flex gap-2">
-            <div class="w-full">
-              <UInput
-                class="min-w-full"
-                v-model="search.name"
-                placeholder="Search by mentor, language or role"
-              ></UInput>
-            </div>
-            <div class="w-full">
-              <USelect
-                class="min-w-full"
-                :items="categories"
-                v-model="search.category"
-                valueKey="name"
-                labelKey="name"
-              ></USelect>
-            </div>
-            <div class="w-full">
-              <USelect
-                class="min-w-full"
-                :items="['Canada', 'USA', 'Mexico']"
-                v-model="search.country"
-              ></USelect>
-            </div>
-            <UButton class="" type="submit">Search</UButton>
-          </div>
-        </UCard>
-      </form>
-    </UPageSection>
+    <HomeCategories
+      v-if="categories?.length"
+      :categories="categories"
+      :catCount="catCount"
+    />
 
-    <UPageSection class="text-center"
-      ><template #title
-        ><h1 class="font-bold mx-auto">
-          Look at a glance how our systems work
-        </h1></template
-      >
-      <template #leading
-        ><UBadge color="neutral" variant="outline">Workflow</UBadge></template
-      >
-      <template #features>
-        <div v-for="(workflow, index) in workflows" :key="workflow.id">
-          <div
-            class="text-center m-2 py-8 px-6"
-            :class="{ 'bg-white shadow-2xl': index === 1 }"
-          >
-            <img
-              :src="workflow.image"
-              class="mb-5 mx-auto rounded-[50%] border-1 border-green-200 p-3 h-[120px] w-[120px]"
-              :alt="workflow.title"
-            />
-            <h5 class="font-bold mb-2">{{ workflow.title }}</h5>
-            <p class="text-muted">{{ workflow.details }}</p>
-          </div>
-        </div>
-      </template>
-    </UPageSection>
-    <UPageSection class="text-center"
-      ><template #title
-        ><h1 class="font-bold mx-auto">
-          Browse Mentors by Categories
-        </h1></template
-      >
-      <template #leading
-        ><UBadge color="neutral" variant="outline">Categories</UBadge></template
-      >
-      <template #features>
-        <div v-for="(category, index) in categories" :key="category.id">
-          <UCard>
-            <div class="text-center m-2 py-8 px-6">
-              <i :class="`${category.icon} text-[20px]`" />
+    <HomeFeatures
+      v-if="features?.length"
+      :features="features"
+      :trans="trans"
+    />
 
-              <h5 class="font-bold mb-2">{{ category.name }}</h5>
-              <h5 class="font-bold mb-2">
-                Mentors {{ categoryCount(category.id).cnt }}
-              </h5>
-            </div>
-          </UCard>
-        </div>
-      </template>
-    </UPageSection>
-    <UPageSection v-if="features?.length" class="text-center"
-      ><template #title
-        ><h1 class="font-bold mx-auto">
-          Learn that new skill, launch that project, land your dream career.
-        </h1></template
-      >
-      <template #leading
-        ><UBadge color="neutral" variant="outline">Features</UBadge></template
-      >
-      <template #features>
-        <div v-for="(feature, index) in features" :key="feature.id">
-          <div
-            class="text-center m-2 py-8 px-6"
-            :class="{ 'bg-white shadow-2xl': index === 1 }"
-          >
-            <img :src="feature.image" class="mb-3 w-25" :alt="feature.name" />
-            <h5 class="text-dark mb-2">{{ feature.name }}</h5>
-            <p class="text-muted">{{ feature.details }}</p>
-          </div>
-        </div>
-      </template>
-    </UPageSection>
-    <div class="row">
-      <div class="col-md-12 home-image-main">
-        <div class="hero-mentors-imgs">
-          <div class="tab-content" id="myTabContent">
-            <!-- Mentee -->
-            <div class="tab-pane fade show active" id="one">
-              <div class="col-lg-10 mb-8 pl-0">
-                <form
-                  @submit.prevent="submitSearch"
-                  class="home-search style-two"
-                >
-                  <div class="row align-items-center">
-                    <div class="col-md-4">
-                      <div class="form-group has-search">
-                        <span
-                          class="bi bi-search text-primary form-control-feedback"
-                        ></span>
-                        <input
-                          v-model="search.name"
-                          type="text"
-                          placeholder="Search by mentor, language or role"
-                          class="form-control"
-                        />
-                      </div>
-                    </div>
+    <HomeTopMentors
+      v-if="mentors?.length"
+      :mentors="mentors"
+      :trans="trans"
+    />
 
-                    <div class="col-md-3">
-                      <select v-model="search.category" class="form-control">
-                        <option value="">Categories</option>
-                        <option
-                          v-for="cat in categories"
-                          :key="cat.id"
-                          :value="cat.id"
-                        >
-                          {{ cat.name }}
-                        </option>
-                      </select>
-                    </div>
+    <HomeBlog
+      v-if="posts?.length"
+      :posts="posts"
+      :trans="trans"
+    />
 
-                    <div class="col-md-3">
-                      <select v-model="search.country" class="form-control">
-                        <option value="">Country</option>
-                        <!-- Replace with your countries API -->
-                        <option value="1">Canada</option>
-                        <option value="2">USA</option>
-                      </select>
-                    </div>
+    <HomeTestimonials
+      v-if="testimonials?.length"
+      :testimonials="testimonials"
+      :trans="trans"
+      :site-name="settings.site_name || 'OurApp'"
+    />
 
-                    <div class="col-md-2">
-                      <button
-                        type="submit"
-                        class="btn btn-primary btn-md w-100"
-                      >
-                        Search
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-
-            <!-- Mentor -->
-            <div class="tab-pane fade" id="two">
-              <div class="col-md-12 pt-8 pl-0 text-left">
-                <h1 class="display-4 mb-2 font-weight-bold">
-                  {{ settings?.site_titleMentor }}
-                </h1>
-                <p class="text-muted fs-20 mt-2 mb-5">
-                  Build confidence as a leader
-                </p>
-                <NuxtLink
-                  to="/register?trial=start"
-                  class="btn btn-lg btn-primary mt-4"
-                >
-                  Become a Member
-                </NuxtLink>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </UContainer>
-
-  <!-- FEATURES -->
-  <section v-if="features?.length" class="bg-white py-12">
-    <div class="container text-center">
-      <div class="mb-8">
-        <span class="badge badge-secondary-soft mb-3">Features</span>
-        <h1>Learn new skills and launch your project</h1>
-      </div>
-
-      <div class="row justify-content-center">
-        <div
-          v-for="(feature, index) in features"
-          :key="feature.id"
-          class="col-md-4 mb-5"
-          :data-aos-delay="index * 100"
-          data-aos="zoom-in-up"
-        >
-          <div class="template-box text-left shadow-sm rounded-1 p-4">
-            <img :src="feature.image" class="mb-3 w-25" :alt="feature.name" />
-            <h5 class="text-dark mb-2">{{ feature.name }}</h5>
-            <p class="text-muted">{{ feature.details }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MENTORS -->
-  <section v-if="mentors?.length" class="py-12">
-    <div class="container">
-      <h3 class="mb-4">Discover the world’s top mentors</h3>
-      <div class="row">
-        <div
-          v-for="(mentor, index) in mentors"
-          :key="mentor.id"
-          class="col-md-3 col-sm-6 mb-4"
-        >
-          <div class="card shadow-sm">
-            <img :src="mentor.image" class="card-img-top" :alt="mentor.name" />
-            <div class="card-body text-center">
-              <h6 class="mb-1">{{ mentor.name }}</h6>
-              <p class="text-muted small">{{ mentor.role }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BLOGS -->
-  <section v-if="posts?.length" class="bg-lights py-12">
-    <div class="container text-center">
-      <span class="badge badge-primary-soft mb-3">Blogs</span>
-      <h1 class="text-dark font-weight-bold mb-8">
-        Learn more. Empower yourself.
-      </h1>
-
-      <div class="row">
-        <div
-          v-for="(post, index) in posts"
-          :key="post.id"
-          class="col-md-4 mb-4"
-        >
-          <div class="card shadow-sm border-0 h-100">
-            <img :src="post.image" class="card-img-top" :alt="post.title" />
-            <div class="card-body text-left">
-              <h5>{{ post.title }}</h5>
-              <p class="text-muted">{{ post.excerpt }}</p>
-              <NuxtLink
-                :to="`/blog/${post.slug}`"
-                class="btn btn-link text-primary p-0"
-              >
-                Read more →
-              </NuxtLink>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section v-if="testimonials?.length" class="bg-light py-12">
-    <div class="container text-center">
-      <span class="badge badge-secondary-soft mb-3">Testimonials</span>
-      <h1 class="text-dark font-weight-bold mb-8">
-        What people say about
-        <b class="text-primary">{{ settings?.siteName }}</b>
-      </h1>
-
-      <div class="row justify-content-center">
-        <div
-          v-for="(t, index) in testimonials"
-          :key="t.id"
-          class="col-md-4 mb-4"
-        >
-          <div class="card shadow-none border h-100 bg-lights p-4">
-            <div
-              class="avatar-sm mx-auto mb-3"
-              :style="{ backgroundImage: `url(${t.image})` }"
-            ></div>
-            <h5 class="mb-1">{{ t.name }}</h5>
-            <p class="text-muted small">{{ t.designation }}</p>
-            <p class="text-muted">{{ t.feedback }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BRANDS -->
-  <section v-if="brands?.length" class="bg-grays py-6 border-top">
-    <div class="container">
-      <div class="row justify-content-center align-items-center">
-        <div
-          v-for="brand in brands"
-          :key="brand.id"
-          class="col-md-2 col-sm-3 col-4 text-center mb-3"
-        >
-          <a :href="brand.link" target="_blank">
-            <div
-              class="brand_img"
-              :style="{ backgroundImage: `url(${brand.logo})` }"
-            ></div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+    <HomeBrands
+      v-if="brands?.length"
+      :brands="brands"
+    />
+  </main>
 </template>
+
