@@ -5,7 +5,6 @@ const props = defineProps<{
   randomMentors: any[]
   categories: any[]
   countries: any[]
-  trans: (key: string) => string
 }>()
 
 // State for the form inputs
@@ -40,14 +39,14 @@ const tabItems = [
     <div class="absolute top-0 right-0 h-full w-1/2 opacity-20 md:opacity-100 -z-10 hidden lg:block">
       <div class="relative w-full h-full">
         <div
-          v-if="randomMentors[3]"
+          v-if="randomMentors[0]"
           class="absolute top-10 left-0 w-24 h-24 rounded-full bg-cover shadow-lg"
-          :style="{ backgroundImage: `url(${randomMentors[3].image})` }"
+          :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
         />
         <div
-          v-if="randomMentors[1]"
+          v-if="randomMentors[0]"
           class="absolute top-20 left-40 w-32 h-32 rounded-full bg-cover shadow-lg"
-          :style="{ backgroundImage: `url(${randomMentors[1].image})` }"
+          :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
         />
         <div
           v-if="randomMentors[0]"
@@ -55,14 +54,14 @@ const tabItems = [
           :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
         />
         <div
-          v-if="randomMentors[4]"
+          v-if="randomMentors[0]"
           class="absolute bottom-20 right-10 w-24 h-24 rounded-full bg-cover shadow-lg"
-          :style="{ backgroundImage: `url(${randomMentors[4].image})` }"
+          :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
         />
         <div
-          v-if="randomMentors[2]"
+          v-if="randomMentors[0]"
           class="absolute bottom-10 left-20 w-28 h-28 rounded-full bg-cover shadow-lg"
-          :style="{ backgroundImage: `url(${randomMentors[2].image})` }"
+          :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
         />
         </div>
     </div>
@@ -71,7 +70,7 @@ const tabItems = [
       <template #mentee>
         <div class="pt-8">
           <h1 class="text-4xl md:text-5xl lg:w-3/5 font-bold mb-2 text-gray-900 dark:text-white">
-            {{ settings.site_title }}
+            {{ settings.siteTitle }}
           </h1>
           <p class="text-lg lg:w-1/2 text-gray-500 dark:text-gray-400 mt-2 mb-5">
             {{ settings.description }}

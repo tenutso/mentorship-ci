@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
   testimonials: any[]
-  trans: (key: string) => string
   siteName: string
 }>()
 </script>
@@ -10,9 +9,9 @@ defineProps<{
   <section class="py-16 bg-gray-100 dark:bg-gray-800">
     <UContainer>
       <div class="max-w-2xl mx-auto text-center mb-10">
-        <UBadge :label="trans('testimonial')" color="gray" variant="soft" />
+        <UBadge :label="$t('testimonial')" color="neutral" variant="soft" />
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white mt-3">
-          {{ trans('testimonial-title') }} <span class="text-primary">{{ siteName }}</span>
+          {{ $t('testimonial-title') }} <span class="text-primary">{{ siteName }}</span>
         </h2>
       </div>
 

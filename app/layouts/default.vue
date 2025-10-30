@@ -3,5 +3,4 @@
   <UMain>
     <NuxtPage />
   </UMain>
-  <Footer />
 </template>

@@ -3,7 +3,6 @@ import BlogPostCard from './BlogPostCard.vue'
 
 defineProps<{
   posts: any[]
-  trans: (key: string) => string
 }>()
 </script>
 
@@ -11,9 +10,9 @@ defineProps<{
   <section class="py-16 bg-gray-50 dark:bg-gray-900">
     <UContainer>
       <div class="max-w-2xl mx-auto text-center mb-10">
-        <UBadge :label="trans('blogs')" color="gray" variant="soft" />
+        <UBadge :label="$t('blogs')" color="neutral" variant="soft" />
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white mt-3">
-          {{ trans('learn-more-empower-yourself') }}
+          {{ $t('learn-more-empower-yourself') }}
         </h2>
       </div>
 

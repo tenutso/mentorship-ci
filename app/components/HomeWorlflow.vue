@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
   workflows: any[]
-  trans: (key: string) => string
 }>()
 
 // Helper to apply the special shadow
@@ -15,9 +14,9 @@ const cardUi = (isFeatured: boolean) => ({
 <template>
   <UContainer as="section" class="py-16">
     <div class="max-w-2xl mx-auto text-center mb-10">
-      <UBadge :label="trans('workflow')" color="gray" variant="soft" />
+      <UBadge :label="$t('workflow')" color="neutral" variant="soft" />
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mt-3">
-        {{ trans('workflow-title') }}
+        {{ $t('workflow-title') }}
       </h2>
     </div>
 

@@ -13,12 +13,14 @@ const { data: mentors } = await useFetch("/api/mentors");
 const { data: posts } = await useFetch("/api/posts");
 const { data: testimonials } = await useFetch("/api/testimonials");
 const { data: brands } = await useFetch("/api/brands");
+const { data: pages } = await useFetch("/api/pages");
 // 🟢 Search form
 const search = ref({
   name: "",
   category: "",
   country: "",
 });
+const showMenu = ref(true)
 
 const submitSearch = () => {
   navigateTo({
@@ -31,47 +33,20 @@ const submitSearch = () => {
   });
 };
 
-
-// This function would be replaced by nuxt-i18n's $t() function
-const trans = (key: string) => {
-  const translations: Record<string, string> = {
-    'mentee': 'I am a Mentee',
-    'mentor': 'I am a Mentor',
-    'build-confidence-as-a-leader': 'Build confidence as a leader and give back.',
-    'became-a-member': 'Become a Member',
-    'workflow': 'Workflow',
-    'workflow-title': 'How It Works',
-    'categories': 'Categories',
-    'browse-mentors-by-categories': 'Browse mentors by categories',
-    'mentors': 'Mentors',
-    'features': 'Features',
-    'learn-that-new-skill-launch-that-project': 'Learn that new skill, launch that project',
-    'discover-the-worlds-top-mentors': "Discover the world's top mentors",
-    'blogs': 'Blogs',
-    'learn-more-empower-yourself': 'Learn more, empower yourself',
-    'testimonial': 'Testimonials',
-    'testimonial-title': 'What our users say about',
-  }
-  return translations[key] || key
-}
-
-
 </script>
 
 <template>
-  <main>
+  <>
     <HomeHero
       :settings="settings"
-      :random-mentors="randomMentors"
+      :randomMentors="randomMentors"
       :categories="categories"
       :countries="countries"
-      :trans="trans"
     />
 
     <HomeWorkflow
       v-if="workflows?.length"
       :workflows="workflows"
-      :trans="trans"
     />
 
     <HomeCategories
@@ -83,25 +58,21 @@ const trans = (key: string) => {
     <HomeFeatures
       v-if="features?.length"
       :features="features"
-      :trans="trans"
     />
 
     <HomeTopMentors
       v-if="mentors?.length"
       :mentors="mentors"
-      :trans="trans"
     />
 
     <HomeBlog
       v-if="posts?.length"
       :posts="posts"
-      :trans="trans"
     />
 
     <HomeTestimonials
       v-if="testimonials?.length"
       :testimonials="testimonials"
-      :trans="trans"
       :site-name="settings.site_name || 'OurApp'"
     />
 
@@ -109,6 +80,15 @@ const trans = (key: string) => {
       v-if="brands?.length"
       :brands="brands"
     />
-  </main>
+    <Footer
+      v-if="showMenu && !pending"
+      :settings="settings"
+      :pages="pages"
+    />
+
+    <UNotifications />
+
+    <ScrollToTop />
+  <>
 </template>
 

@@ -4,14 +4,13 @@ import MentorCard from './MentorCard.vue'
 
 defineProps<{
   mentors: any[]
-  trans: (key: string) => string
 }>()
 </script>
 
 <template>
   <UContainer as="section" class="py-16">
     <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      {{ trans('discover-the-worlds-top-mentors') }}
+      {{ $t('discover-the-worlds-top-mentors') }}
     </h2>
 
     <UCarousel

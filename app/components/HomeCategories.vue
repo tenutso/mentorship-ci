@@ -14,7 +14,7 @@ const categoryCount = (id: Number) => {
   <section class="py-16 bg-primary-50 dark:bg-primary-950">
     <UContainer>
       <div class="max-w-2xl mx-auto text-center mb-10">
-        <UBadge :label="$t('categories')" color="gray" variant="soft" />
+        <UBadge :label="$t('categories')" color="neutral" variant="soft" />
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white mt-3">
           {{ $t('browse-mentors-by-categories') }}
         </h2>

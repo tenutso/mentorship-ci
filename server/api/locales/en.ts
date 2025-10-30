@@ -7,6 +7,6 @@ export default defineEventHandler(async () => {
     Object.assign(transObj, {[item.keyword]:item.english});
   })
   //const trans = translations.map(item => { return {[item.keyword]:item.english} });
-  console.log("TRANSLATIONS:", transObj);
+  //console.log("TRANSLATIONS:", transObj);
   return  transObj;
 });

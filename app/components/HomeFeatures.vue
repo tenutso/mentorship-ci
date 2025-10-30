@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
   features: any[]
-  trans: (key: string) => string
 }>()
 </script>
 
@@ -9,9 +8,9 @@ defineProps<{
   <section class="py-16 bg-white dark:bg-gray-900">
     <UContainer>
       <div class="max-w-2xl mx-auto text-center mb-10">
-        <UBadge :label="trans('features')" color="gray" variant="soft" />
+        <UBadge :label="$t('features')" color="neutral" variant="soft" />
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white mt-3">
-          {{ trans('learn-that-new-skill-launch-that-project') }}
+          {{ $t('learn-that-new-skill-launch-that-project') }}
         </h2>
       </div>
 
