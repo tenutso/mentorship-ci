@@ -36,7 +36,6 @@ const submitSearch = () => {
 </script>
 
 <template>
-  <>
     <HomeHero
       :settings="settings"
       :randomMentors="randomMentors"
@@ -89,6 +88,5 @@ const submitSearch = () => {
     <UNotifications />
 
     <ScrollToTop />
-  <>
 </template>
 

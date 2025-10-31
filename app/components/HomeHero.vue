@@ -51,19 +51,19 @@ const tabItems = [
           :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
         />
         <div
-          v-if="randomMentors[0]"
+          v-if="randomMentors[1]"
           class="absolute top-20 left-40 w-32 h-32 rounded-full bg-cover shadow-lg"
-          :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
+          :style="{ backgroundImage: `url(${randomMentors[1].image})` }"
         />
         <div
-          v-if="randomMentors[0]"
+          v-if="randomMentors[2]"
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-cover shadow-lg"
-          :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
+          :style="{ backgroundImage: `url(${randomMentors[2].image})` }"
         />
         <div
-          v-if="randomMentors[0]"
+          v-if="randomMentors[3]"
           class="absolute bottom-20 right-10 w-24 h-24 rounded-full bg-cover shadow-lg"
-          :style="{ backgroundImage: `url(${randomMentors[0].image})` }"
+          :style="{ backgroundImage: `url(${randomMentors[3].image})` }"
         />
         <div
           v-if="randomMentors[0]"
@@ -75,7 +75,7 @@ const tabItems = [
 
     <UTabs
       :items="tabItems"
-      :ui="{ list: 'w-auto', trigger: 'min-w-fit px-4 justify-left' }"
+      :ui="{ list: 'w-auto', trigger: 'min-w-fit px-4' }"
     >
       <template #mentee>
         <div class="pt-8">
